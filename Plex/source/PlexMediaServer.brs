@@ -226,6 +226,7 @@ Function pmsConstructVideoItem(item, seekValue, allowDirectPlay, forceDirectPlay
     key = ""
     ratingKey = ""
     mediaItem = item.preferredMediaItem
+    file = ""
 
     if identifier = "com.plexapp.plugins.library" then
         ' Regular library video
@@ -233,6 +234,7 @@ Function pmsConstructVideoItem(item, seekValue, allowDirectPlay, forceDirectPlay
         key = item.key
         ratingKey = item.ratingKey
         videoRes = mediaItem.videoresolution
+	file = mediaItem.preferredPart.file
     else if mediaItem = invalid then
         ' Plugin video
         mediaKey = item.key
@@ -265,6 +267,20 @@ Function pmsConstructVideoItem(item, seekValue, allowDirectPlay, forceDirectPlay
                 next
             end if
         end if
+    end if
+
+    if file <> "" then
+        ' Replace the plex 32400 port /w the bif server port 32405
+        ' Perhaps one day we can get plex to be a bif server too.
+        r = CreateObject("roRegex", ":[0-9]+$", "i")
+        base = r.ReplaceAll(m.serverUrl, "")
+        video.SDBifUrl=base+":32405"
+
+        for each part in strTokenize(file, "/")
+            video.SDBifUrl = video.SDBifUrl + "/" + HttpEncode(part)
+        next
+        video.SDBifUrl = video.SDBifUrl+".sd.bif"
+        print "Bif Url: "+video.SDBifUrl
     end if
 
     deviceInfo = CreateObject("roDeviceInfo")
