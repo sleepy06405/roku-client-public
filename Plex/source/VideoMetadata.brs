@@ -1,4 +1,3 @@
-
 Function newVideoMetadata(container, item, detailed=false) As Object
     video = createBaseMetadata(container, item)
 
@@ -252,19 +251,20 @@ Function ParseVideoMedia(videoItem) As Object
 			part = CreateObject("roAssociativeArray")
 			part.id = MediaPart@id
 			part.key = MediaPart@key
-            part.postURL = MediaPart@postURL
+                        part.postURL = MediaPart@postURL
+                        part.file = MediaPart@file
 			part.streams = CreateObject("roArray", 5, true)
-            part.subtitles = invalid
-			for each StreamItem in MediaPart.Stream
-				stream = CreateObject("roAssociativeArray")
-				stream.id = StreamItem@id
-				stream.streamType = StreamItem@streamType
-				stream.codec = StreamItem@codec
-				stream.language = StreamItem@language
-                stream.languageCode = StreamItem@languageCode
-				stream.selected = StreamItem@selected
-				stream.channels = StreamItem@channels
-                stream.key = StreamItem@key
+                        part.subtitles = invalid
+		for each StreamItem in MediaPart.Stream
+			stream = CreateObject("roAssociativeArray")
+			stream.id = StreamItem@id
+			stream.streamType = StreamItem@streamType
+			stream.codec = StreamItem@codec
+			stream.language = StreamItem@language
+                	stream.languageCode = StreamItem@languageCode
+			stream.selected = StreamItem@selected
+			stream.channels = StreamItem@channels
+                	stream.key = StreamItem@key
                 if stream.selected <> invalid AND stream.streamType = "3" then
                     part.subtitles = stream
                 end if
